@@ -1,0 +1,132 @@
+╔══════════════════════════════════════════════════════════════════╗
+║              🔐 ADMIN USER SETUP - QUICK GUIDE                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+✅ YOUR SYSTEM IS NOW CONFIGURED:
+
+   • Admin emails → Admin Dashboard 🔴
+   • All other users → User Dashboard 🔵
+   • No role found → User Dashboard (default) 🔵
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 HOW TO MAKE A USER ADMIN:
+
+   STEP 1: Sign up the user first
+           → Go to http://localhost:5173/signup
+           → Use the email you want to make admin
+
+   STEP 2: Run SQL in Supabase
+           → Open: https://app.supabase.com/project/qhgiqtowtgmreekgipud
+           → Go to: SQL Editor
+           → Run this script:
+
+           ┌────────────────────────────────────────────────────┐
+           │ INSERT INTO user_roles (user_id, role)             │
+           │ VALUES (                                           │
+           │   (SELECT id FROM auth.users                       │
+           │    WHERE email = 'YOUR_ADMIN_EMAIL'),              │
+           │   'admin'                                          │
+           │ )                                                  │
+           │ ON CONFLICT (user_id)                              │
+           │ DO UPDATE SET role = 'admin';                      │
+           └────────────────────────────────────────────────────┘
+
+           Replace 'YOUR_ADMIN_EMAIL' with actual email!
+
+   STEP 3: Test login
+           → Login with admin email
+           → Should go to Admin Dashboard ✅
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 VERIFY ADMIN ROLE:
+
+   Run this SQL to check:
+
+   ┌────────────────────────────────────────────────────────────┐
+   │ SELECT u.email, ur.role                                    │
+   │ FROM auth.users u                                          │
+   │ LEFT JOIN user_roles ur ON u.id = ur.user_id               │
+   │ WHERE u.email = 'YOUR_ADMIN_EMAIL';                        │
+   └────────────────────────────────────────────────────────────┘
+
+   Expected result: role = 'admin' ✅
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 DEBUGGING:
+
+   Check browser console (F12) after login:
+
+   For Admin:
+   ✓ "User role: admin"
+   ✓ "Admin user detected, routing to admin dashboard"
+
+   For Regular User:
+   ✓ "User role: user"
+   ✓ "Regular user detected, routing to user dashboard"
+
+   For New User (no role):
+   ✓ "No role found, defaulting to user dashboard"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📁 FILES AVAILABLE:
+
+   ✓ ADMIN_USER_SCRIPTS.sql    - All SQL scripts for copy-paste
+   ✓ admin_setup_guide.md      - Detailed guide (in artifacts)
+   ✓ ADMIN_SETUP.md            - Original setup documentation
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 EXAMPLE SETUP:
+
+   Admin User:
+   • Email: admin@yopmail.com
+   • Role: admin (set via SQL)
+   • Routes to: /admin-dashboard 🔴
+
+   Regular Users:
+   • Email: user1@yopmail.com, user2@yopmail.com
+   • Role: user (automatic on signup)
+   • Routes to: /user-dashboard 🔵
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ IMPORTANT:
+
+   • Only set admin role via Supabase SQL
+   • Never allow users to set their own role
+   • Keep admin emails documented
+   • Use strong passwords for admin accounts
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🆘 TROUBLESHOOTING:
+
+   Problem: Admin routes to User Dashboard
+   Fix: Check role in database, should be 'admin' not 'user'
+
+   Problem: User not in user_roles table
+   Fix: Run the INSERT script to add them
+
+   Problem: Can't find user by email
+   Fix: Check spelling, or list all users:
+        SELECT email FROM auth.users;
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ QUICK TEST:
+
+   1. Sign up with test email
+   2. Run SQL to make them admin
+   3. Login
+   4. Check console logs
+   5. Verify dashboard route
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏱️ TIME TO SETUP: 2 minutes per admin user
+
+╚══════════════════════════════════════════════════════════════════╝

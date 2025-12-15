@@ -1,0 +1,79 @@
+╔══════════════════════════════════════════════════════════════════╗
+║                    🔧 QUICK FIX REFERENCE                        ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📍 PROBLEM: "Database error saving new user"
+
+✅ SOLUTION: Apply Option 1 (Fix the Trigger)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 QUICK STEPS:
+
+1. Open Supabase Dashboard
+   🔗 https://app.supabase.com/project/qhgiqtowtgmreekgipud
+
+2. Click "SQL Editor" → "New Query"
+
+3. Copy & Paste this file's content:
+   📄 FIX_SIGNUP_DATABASE_ERROR.sql
+
+4. Click "RUN" button
+
+5. Test signup at:
+   🔗 http://localhost:5173/signup
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📁 FILES CREATED:
+
+✓ FIX_SIGNUP_DATABASE_ERROR.sql  ← Run this in Supabase
+✓ fix_walkthrough.md             ← Detailed step-by-step guide
+✓ error_explanation.md           ← Technical explanation
+✓ HOW_TO_FIX.md                  ← Troubleshooting guide
+✓ SIMPLE_FIX.sql                 ← Alternative quick fix
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 WHAT THIS FIXES:
+
+✓ Adds SECURITY DEFINER to trigger function
+✓ Updates RLS policies to allow role insertion
+✓ Adds error handling to prevent signup failures
+✓ Keeps admin/user role system working
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ IMPORTANT:
+
+• This will DROP and RECREATE the user_roles table
+• Any existing user roles will be deleted
+• Users will need to be reassigned admin roles after fix
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ SUCCESS INDICATORS:
+
+After running SQL:
+  ✓ Message: "Setup complete! Try signing up now."
+  ✓ No red error messages in SQL Editor
+
+After testing signup:
+  ✓ Green success message appears
+  ✓ No "Database error saving new user"
+  ✓ Redirects to login page
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🆘 NEED HELP?
+
+Check the detailed guides:
+  • fix_walkthrough.md - Step-by-step with screenshots
+  • error_explanation.md - Technical deep dive
+  • HOW_TO_FIX.md - Troubleshooting tips
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏱️ ESTIMATED TIME: 2-3 minutes
+
+╚══════════════════════════════════════════════════════════════════╝

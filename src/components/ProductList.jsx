@@ -14,17 +14,27 @@ import {
 } from "react";
 import { filterReducer, initialFilterState } from "../reducers/FilterReducer";
 import { ThemeContext } from "../context/ThemeContext";
+import { supabase } from "../utils/supabaseClient";
+import { useNavigate } from "react-router-dom";
 
 const ProductList = forwardRef((props, ref) => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [filterState, dispatch] = useReducer(filterReducer, initialFilterState);
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("/Products.json")
-      .then((res) => res.json())
-      .then((data) => setProducts(data))
-      .catch((err) => console.error("Error fetching products:", err));
+    const loadProducts = async () => {
+      const { data, error } = await supabase.from("products").select("*");
+
+      if (error) {
+        console.error("Error fetching products:", error);
+      } else {
+        setProducts(data);
+      }
+    };
+
+    loadProducts();
   }, []);
 
   // Focus search input on load
@@ -77,6 +87,11 @@ const ProductList = forwardRef((props, ref) => {
     dispatch({ type: "RESET_FILTERS" });
   }, []);
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/login");
+  };
+
   // Expose resetFilters to parent
   useImperativeHandle(ref, () => ({
     resetFilters: handleReset,
@@ -104,6 +119,7 @@ const ProductList = forwardRef((props, ref) => {
         <button onClick={handleReset} className="btn-secondary">
           Reset Filters
         </button>
+        <button onClick={handleLogout}>Logout</button>
       </div>
 
       {isPending && (

@@ -1,0 +1,122 @@
+╔══════════════════════════════════════════════════════════════════╗
+║         🔧 FIX: "Failed to add to wishlist" Error              ║
+╚══════════════════════════════════════════════════════════════════╝
+
+❌ PROBLEM: Wishlist table doesn't exist in database
+
+✅ SOLUTION: Run SQL script in Supabase (2 minutes)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 QUICK FIX STEPS:
+
+   STEP 1: Open Supabase Dashboard
+           🔗 https://app.supabase.com/project/qhgiqtowtgmreekgipud
+
+   STEP 2: Click "SQL Editor" in left sidebar
+
+   STEP 3: Click "New Query" button
+
+   STEP 4: Open this file in your project:
+           📄 WISHLIST_MIGRATION.sql
+
+   STEP 5: Copy ALL the SQL code from that file
+
+   STEP 6: Paste into Supabase SQL Editor
+
+   STEP 7: Click "RUN" button
+
+   STEP 8: Wait for success message:
+           ✅ "Wishlist table created successfully!"
+
+   STEP 9: Go back to your app and REFRESH the page (F5)
+
+   STEP 10: Click heart icon on any product
+            ✅ Should work now!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 SQL SCRIPT TO RUN:
+
+   The complete SQL script is in:
+   📄 WISHLIST_MIGRATION.sql
+
+   Or copy from here:
+
+   ┌────────────────────────────────────────────────────────┐
+   │ CREATE TABLE IF NOT EXISTS wishlist (                  │
+   │   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),       │
+   │   user_id UUID REFERENCES auth.users(id)               │
+   │     ON DELETE CASCADE,                                 │
+   │   product_id BIGINT REFERENCES products(id)            │
+   │     ON DELETE CASCADE,                                 │
+   │   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),   │
+   │   UNIQUE(user_id, product_id)                          │
+   │ );                                                     │
+   │                                                        │
+   │ ALTER TABLE wishlist ENABLE ROW LEVEL SECURITY;        │
+   │                                                        │
+   │ CREATE POLICY "Users can view own wishlist"            │
+   │   ON wishlist FOR SELECT                               │
+   │   USING (auth.uid() = user_id);                        │
+   │                                                        │
+   │ CREATE POLICY "Users can add to own wishlist"          │
+   │   ON wishlist FOR INSERT                               │
+   │   WITH CHECK (auth.uid() = user_id);                   │
+   │                                                        │
+   │ CREATE POLICY "Users can remove from own wishlist"     │
+   │   ON wishlist FOR DELETE                               │
+   │   USING (auth.uid() = user_id);                        │
+   │                                                        │
+   │ GRANT SELECT, INSERT, DELETE ON wishlist               │
+   │   TO authenticated;                                    │
+   └────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ VERIFY IT WORKED:
+
+   After running SQL:
+
+   1. Check for success message in Supabase
+   2. Refresh your app (http://localhost:5173/user-dashboard)
+   3. Click white heart on any product
+   4. Heart should turn red ❤️
+   5. No error message!
+   6. Check "My Wishlist" tab - product appears
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🆘 STILL NOT WORKING?
+
+   Problem: Still getting error after running SQL
+   
+   Try these:
+   
+   1. REFRESH the browser page (Ctrl + Shift + R)
+   2. Clear browser cache
+   3. Logout and login again
+   4. Check browser console (F12) for errors
+   5. Verify table exists:
+      
+      Run in SQL Editor:
+      SELECT * FROM wishlist;
+      
+      Should show empty table (no error)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DETAILED GUIDE:
+
+   Check the artifact "wishlist_error_fix.md" for:
+   • Detailed troubleshooting steps
+   • Verification queries
+   • Common issues and solutions
+   • Manual testing procedures
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏱️ TIME TO FIX: 2 minutes
+🎯 DIFFICULTY: Easy (just copy & paste SQL)
+
+╚══════════════════════════════════════════════════════════════════╝
