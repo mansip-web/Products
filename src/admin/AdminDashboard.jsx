@@ -4,6 +4,9 @@ import { supabase } from "../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import ProductManagement from "./ProductManagement";
 import UserManagement from "./UserManagement";
+import DashboardOverview from "./DashboardOverview";
+import OrderManagement from "./OrderManagement";
+import Settings from "./Settings";
 
 export default function AdminDashboard() {
   const [productCount, setProductCount] = useState(0);
@@ -31,51 +34,11 @@ export default function AdminDashboard() {
       case "users":
         return <UserManagement />;
       case "orders":
-        return (
-          <div className="admin-section">
-            <h2>Order Management</h2>
-            <p>Coming soon...</p>
-          </div>
-        );
+        return <OrderManagement />;
       case "settings":
-        return (
-          <div className="admin-section">
-            <h2>Settings</h2>
-            <p>Coming soon...</p>
-          </div>
-        );
+        return <Settings />;
       default:
-        return (
-          <>
-            <h1 className="admin-title">Welcome Admin 👑</h1>
-
-            <div className="admin-stats">
-              <div className="card">
-                <h3>Total Products</h3>
-                <p>{productCount}</p>
-              </div>
-
-              <div className="card">
-                <h3>Total Users</h3>
-                <p>48</p>
-              </div>
-
-              <div className="card">
-                <h3>Orders</h3>
-                <p>32 New</p>
-              </div>
-            </div>
-
-            <div className="admin-section">
-              <h2>Recent Activity</h2>
-              <ul>
-                <li>User John added new product "Smart Watch"</li>
-                <li>Admin updated "Sneakers" price</li>
-                <li>New user registered: Anita</li>
-              </ul>
-            </div>
-          </>
-        );
+        return <DashboardOverview productCount={productCount} />;
     }
   };
 

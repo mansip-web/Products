@@ -1,0 +1,109 @@
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.orders-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.orders-filter select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.orders-table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orders-table th,
+.orders-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+
+.orders-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #555;
+}
+
+.orders-table tr:last-child td {
+  border-bottom: none;
+}
+
+.status {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+.status.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status.shipped {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.status.delivered {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status.cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.status-select {
+  padding: 8px 30px 8px 12px; /* Extra padding right for arrow */
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-transform: capitalize;
+  background-color: white;
+  color: #333;
+  width: 140px;
+  /* Re-enable default appearance for arrow, or use custom background image if needed. 
+     Standard select usually has arrow. Removing appearance:none restores it. */
+  appearance: auto;
+  -webkit-appearance: auto;
+}
+
+/* Remove specific background colors for select to keep it white */
+.status-select.pending,
+.status-select.shipped,
+.status-select.delivered,
+.status-select.cancelled {
+  background-color: white;
+  color: #333;
+}
+
+.actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

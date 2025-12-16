@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./ProductManagement.css";
 import { supabase } from "../utils/supabaseClient";
+import { logActivity } from "../utils/logActivities";
+import { useForm, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { productSchema } from "../components/AddProducts/productSchema";
+import Step1 from "../components/AddProducts/Step1";
+import Step2 from "../components/AddProducts/Step2";
+import Step3 from "../components/AddProducts/Step3";  
+
 
 export default function ProductManagement() {
   const [products, setProducts] = useState([]);
@@ -8,14 +16,28 @@ export default function ProductManagement() {
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchCategory, setSearchCategory] = useState("");
   const [filterCategory, setFilterCategory] = useState("All");
+  const [step, setStep] = useState(1);
 
-  const [formData, setFormData] = useState({
+const methods = useForm({
+  resolver: zodResolver(productSchema),
+  defaultValues: {
     name: "",
     category: "",
     price: "",
-    image: "",
-  });
+    rating: "",
+   
+  },
+});
+
+
+  // const [formData, setFormData] = useState({
+  //   name: "",
+  //   category: "",
+  //   price: "",
+  //   image: "",
+  // });
 
   // Fetch products
   useEffect(() => {
@@ -36,57 +58,93 @@ export default function ProductManagement() {
     setLoading(false);
   };
 
-  // Create Product
-  const handleCreate = async (e) => {
-    e.preventDefault();
-    setLoading(true);
 
-    const { error } = await supabase.from("products").insert([
-      {
-        name: formData.name,
-        category: formData.category,
-        price: parseFloat(formData.price),
-        image: formData.image,
-      },
-    ]);
+  const onSubmit = async (data) => {
+  setLoading(true);
 
-    if (error) {
-      alert("Error creating product: " + error.message);
-    } else {
-      alert("Product created successfully!");
-      setShowModal(false);
-      resetForm();
-      fetchProducts();
-    }
-    setLoading(false);
+  const payload = {
+    ...data,
+    price: parseFloat(data.price),
   };
+
+  const query = editingProduct
+    ? supabase.from("products").update(payload).eq("id", editingProduct.id)
+    : supabase.from("products").insert([payload]);
+
+  const { error } = await query;
+
+  if (error) {
+    alert(error.message);
+  } else {
+    await logActivity(
+      "product",
+      editingProduct
+        ? `Product '${data.name}' updated`
+        : `Product '${data.name}' created`
+    );
+
+    setShowModal(false);
+    setEditingProduct(null);
+    methods.reset();
+    fetchProducts();
+  }
+
+  setLoading(false);
+};
+
+  // Create Product
+  // const handleCreate = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   const { error } = await supabase.from("products").insert([
+  //     {
+  //       name: formData.name,
+  //       category: formData.category,
+  //       price: parseFloat(formData.price),
+  //       image: formData.image,
+  //     },
+  //   ]);
+
+  //   if (error) {
+  //     alert("Error creating product: " + error.message);
+  //   } else {
+  //     await logActivity("product", `Product '${formData.name}' created`);
+  //     alert("Product created successfully!");
+  //     setShowModal(false);
+  //     resetForm();
+  //     fetchProducts();
+  //   }
+  //   setLoading(false);
+  // };
 
   // Update Product
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  // const handleUpdate = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
 
-    const { error } = await supabase
-      .from("products")
-      .update({
-        name: formData.name,
-        category: formData.category,
-        price: parseFloat(formData.price),
-        image: formData.image,
-      })
-      .eq("id", editingProduct.id);
+    // const { error } = await supabase
+    //   .from("products")
+    //   .update({
+    //     name: formData.name,
+    //     category: formData.category,
+    //     price: parseFloat(formData.price),
+    //     image: formData.image,
+    //   })
+    //   .eq("id", editingProduct.id);
 
-    if (error) {
-      alert("Error updating product: " + error.message);
-    } else {
-      alert("Product updated successfully!");
-      setShowModal(false);
-      setEditingProduct(null);
-      resetForm();
-      fetchProducts();
-    }
-    setLoading(false);
-  };
+    // if (error) {
+    //   alert("Error updating product: " + error.message);
+    // } else {
+    //   await logActivity("product", `Product '${formData.name}' updated`);
+    //   alert("Product updated successfully!");
+    //   setShowModal(false);
+    //   setEditingProduct(null);
+    //   resetForm();
+    //   fetchProducts();
+    // }
+    // setLoading(false);
+  //};
 
   // Delete Product
   const handleDelete = async (id) => {
@@ -99,41 +157,54 @@ export default function ProductManagement() {
     if (error) {
       alert("Error deleting product: " + error.message);
     } else {
+      await logActivity("product", `Product "${product.name}" was deleted`);
       alert("Product deleted successfully!");
       fetchProducts();
     }
     setLoading(false);
   };
 
-  const resetForm = () => {
-    setFormData({ name: "", category: "", price: "", image: "" });
-  };
+  // const resetForm = () => {
+  //   setFormData({ name: "", category: "", price: "", image: "" });
+  // };
 
   const openCreateModal = () => {
-    resetForm();
-    setEditingProduct(null);
-    setShowModal(true);
-  };
+  methods.reset();      // ✅ RHF reset
+  setStep(1);           // ✅ reset step
+  setEditingProduct(null);
+  setShowModal(true);
+};
 
   const openEditModal = (product) => {
-    setFormData({
-      name: product.name,
-      category: product.category,
-      price: product.price,
-      image: product.image,
-    });
-    setEditingProduct(product);
-    setShowModal(true);
-  };
+  methods.reset({
+    name: product.name,
+    category: product.category,
+    price: product.price,
+    rating: product.rating ?? 1,
+    description: product.description ?? "",
+  });
+  setStep(1);
+  setEditingProduct(product);
+  setShowModal(true);
+};
+
+
+  // ... existing code ...
 
   // Filter products
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      filterCategory === "All" || product.category === filterCategory;
-    return matchesSearch && matchesCategory;
+    const matchesCategorySearch = product.category
+      .toLowerCase()
+      .includes(searchCategory.toLowerCase());
+    const matchesCategoryFilter =
+      filterCategory === "" ||
+      filterCategory === "All" ||
+      product.category === filterCategory;
+
+    return matchesSearch && matchesCategorySearch && matchesCategoryFilter;
   });
 
   return (
@@ -153,6 +224,13 @@ export default function ProductManagement() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="search-input"
         />
+        <input
+          type="text"
+          placeholder="Search categories..."
+          value={searchCategory}
+          onChange={(e) => setSearchCategory(e.target.value)}
+          className="search-input"
+        />
         <select
           value={filterCategory}
           onChange={(e) => setFilterCategory(e.target.value)}
@@ -162,6 +240,10 @@ export default function ProductManagement() {
           <option>Electronics</option>
           <option>Fashion</option>
           <option>Home</option>
+          <option>Sports</option>
+          <option>Cosmetics</option>
+          <option>Toys</option>
+          <option>Books</option>
         </select>
       </div>
 
@@ -218,7 +300,55 @@ export default function ProductManagement() {
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h3>{editingProduct ? "Edit Product" : "Add New Product"}</h3>
-            <form onSubmit={editingProduct ? handleUpdate : handleCreate}>
+            <FormProvider {...methods}>
+  <form onSubmit={methods.handleSubmit(onSubmit)}>
+    {step === 1 && <Step1 />}
+    {step === 2 && <Step2 />}
+    {step === 3 && <Step3 />}
+
+    <div className="modal-actions">
+      {step > 1 && (
+        <button type="button" onClick={() => setStep(step - 1)}>
+          Back
+        </button>
+      )}
+
+      {step < 3 && (
+  <button
+    type="button"
+    onClick={async () => {
+      let fieldsToValidate = [];
+
+      if (step === 1) {
+        fieldsToValidate = ["name", "price"];
+      }
+
+      if (step === 2) {
+        fieldsToValidate = ["category", "rating"];
+      }
+
+      const valid = await methods.trigger(fieldsToValidate);
+
+      if (valid) {
+        setStep(step + 1);
+      }
+    }}
+  >
+    Next
+  </button>
+)}
+
+
+      {step === 3 && (
+        <button type="submit" disabled={loading}>
+          {loading ? "Saving..." : editingProduct ? "Update" : "Create"}
+        </button>
+      )}
+    </div>
+  </form>
+</FormProvider>
+
+            {/* <form onSubmit={editingProduct ? handleUpdate : handleCreate}>
               <div className="form-group">
                 <label>Product Name</label>
                 <input
@@ -288,10 +418,11 @@ export default function ProductManagement() {
                   Cancel
                 </button>
               </div>
-            </form>
+            </form> */}
           </div>
         </div>
       )}
     </div>
   );
+//}
 }

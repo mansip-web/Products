@@ -9,7 +9,7 @@ import {
   updateCartQuantity,
 } from "../store/slices/cartSlice";
 import { fetchWishlist, toggleWishlist } from "../store/slices/wishlistSlice";
-import ProductHighlights from "../components/ProductHighlights";
+import Footer from "../components/Footer";
 import shoppingBg from "../assets/shopping_bg.png";
 import fashionBg from "../assets/fashion_bg.png";
 import electronicsBg from "../assets/electronics_bg.png";
@@ -111,8 +111,8 @@ export default function UserDashboard() {
       </div>
 
       {/* Main Content */}
+      {/* Main Content */}
       <main className="dashboard-main">
-        <ProductHighlights />
         {/* Tabs */}
         <div className="tabs-container">
           <button
@@ -286,6 +286,7 @@ export default function UserDashboard() {
           )}
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

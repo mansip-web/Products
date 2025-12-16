@@ -1,13 +1,15 @@
 .dashboard-container {
   min-height: 100vh;
-  background-color: #ecb4e8;
+  background-color: #7acef0;
+  display: flex;
+  flex-direction: column;
 }
 
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgb(240, 150, 196);
+  background: rgb(39, 195, 235);
   padding: 20px 40px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   position: sticky;
@@ -52,6 +54,8 @@
   padding: 40px;
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
+  flex: 1;
 }
 
 /* Hero Section */
@@ -123,7 +127,7 @@
 }
 
 .tab-btn.active {
-  background: #667eea;
+  background: #ec2f97;
   color: white;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
@@ -220,7 +224,7 @@
 }
 
 .empty-state button {
-  background: #667eea;
+  background: #aa95e4;
   color: white;
   border: none;
   padding: 10px 20px;

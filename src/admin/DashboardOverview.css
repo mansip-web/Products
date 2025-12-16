@@ -1,0 +1,143 @@
+.dashboard-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: rgb(233, 247, 247);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card h3 {
+  margin: 0 0 10px 0;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card p {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* Ensure full width for list containers within the grid if needed, 
+   or move them out of the grid in JSX. 
+   For now, let's make them span full width if they are inside the grid. */
+.users-list-container {
+  grid-column: 1 / -1;
+}
+.charts-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.chart-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chart-card h3 {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activity-list li {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.activity-list li:last-child {
+  border-bottom: none;
+}
+
+.activity-time {
+  min-width: 80px;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.activity-desc {
+  color: #444;
+}
+
+.activity-desc strong {
+  color: #333;
+}
+
+/* User List Styles */
+.users-list-container {
+  background: rgb(187, 227, 236);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  animation: slideDown 0.3s ease-out;
+}
+
+.users-list h4 {
+  margin-bottom: 15px;
+  color: #333;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.user-item {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s;
+}
+
+.user-item:last-child {
+  border-bottom: none;
+}
+
+.user-item:hover {
+  background-color: #f9f9f9;
+}
+
+.user-item p {
+  margin: 2px 0;
+  color: #555;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
